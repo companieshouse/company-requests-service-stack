@@ -3,3 +3,6 @@ aws_profile = "development-eu-west-2"
 enable_container_insights = true
 
 ec2_key_pair_name = "chs-cidev"
+
+create_eventbridge_scheduler_role  = true
+create_eventbridge_scheduler_group = true
