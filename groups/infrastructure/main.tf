@@ -1,19 +1,19 @@
 terraform {
-  required_version = "~> 1.3"
+  required_version = ">= 1.3, < 2.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.54.0"
+      version = ">= 6.0, < 7.0"
     }
     vault = {
       source  = "hashicorp/vault"
-      version = "~> 3.18.0"
+      version = ">= 5.0, < 6.0"
     }
   }
 }
 
 provider "aws" {
-  region  = var.aws_region
+  region = var.aws_region
 }
 
 terraform {
@@ -21,7 +21,7 @@ terraform {
 }
 
 module "ecs-cluster" {
-  source = "git@github.com:companieshouse/terraform-modules//aws/ecs/ecs-cluster?ref=1.0.231"
+  source = "git@github.com:companieshouse/terraform-modules//aws/ecs/ecs-cluster?ref=1.0.407"
 
   stack_name                  = local.stack_name
   name_prefix                 = local.name_prefix
@@ -40,15 +40,7 @@ module "ecs-cluster" {
   scaleup_schedule            = var.asg_scaleup_schedule
   enable_asg_autoscaling      = var.enable_asg_autoscaling
   notify_topic_slack_endpoint = local.notify_topic_slack_endpoint
-  create_eventbridge_scheduler_group    = var.create_eventbridge_scheduler_group
-  create_eventbridge_scheduler_role     = var.create_eventbridge_scheduler_role
-}
 
-module "secrets" {
-  source = "git@github.com:companieshouse/terraform-modules//aws/ecs/secrets?ref=1.0.231"
-
-  environment = var.environment
-  name_prefix = local.name_prefix
-  secrets     = local.parameter_store_secrets
-  kms_key_id  = data.aws_kms_key.stack_configs.id
+  create_eventbridge_scheduler_group = var.create_eventbridge_scheduler_group
+  create_eventbridge_scheduler_role  = var.create_eventbridge_scheduler_role
 }
